@@ -138,7 +138,6 @@ def main():
         debut = time.time()
         distance_mini, couple = plusproches(points)
         temps_diviser = time.time() - debut
-        print("le temps est: ", temps_diviser)
         print(couple)
 
 def comparateur(nb_iteration):
