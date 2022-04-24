@@ -1,7 +1,7 @@
 # Projet Algorithme
 
 
-Recherche des deux points les plus proches
+Recherche des deux points les plus proches parmi un nuage de points
 
 
 ### Pré-requis
@@ -24,5 +24,5 @@ Il y a 4 fichiers tests à dispositions.
 Il est possible de tracer les graphes de performances des algorithmes grâce à un fichier de résultat, en appelant la fonction trace_graphe() dans le programme main.py 
 Le fichier doit être de format: temps_diviser, temps_naif, nb_points
 
-## Auteurs
+## Auteur
 Bourseau Julien, élève 1A, ENSIMAG
