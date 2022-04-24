@@ -12,7 +12,7 @@ class Displayer:
     """
     displayer handles computations for displaying a set of objects
     """
-    svg_dimensions = (800, 600)
+    svg_dimensions = (3000, 2250)
     svg_colors = 'red green blue purple orange saddlebrown mediumseagreen\
                        darkolivegreen lightskyblue dimgray mediumpurple midnightblue\
                        olive chartreuse darkorchid hotpink darkred peru\
