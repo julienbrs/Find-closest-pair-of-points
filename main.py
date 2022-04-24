@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """ Trouve les deux points les plus proches parmi un nuage de points et calcule cette distance"""
 import time
-from sys import argv
 import subprocess
-import math
+from sys import argv
 from itertools import combinations
+import math
+import matplotlib.pyplot as plt
+import numpy as np
 from geo.point import Point
 
 def load_instance(filename):
@@ -86,26 +88,27 @@ def min_centre(points_bande_milieu):
     return min_total, couple_return
 
 
-def partie_recursive(tableau_x, tableau_y):
+def partie_recursive(tab_x, tab_y):
     "partie récursive du diviser pour régner"
-    if len(tableau_x)<=3:       #A partir de 3 points on fait l'algo naïf
-        return algo_naif(tableau_x)
+    if len(tab_x)<=3:       #A partir de 3 points on fait l'algo naïf
+        return algo_naif(tab_x)
 
     #On divise le tableau des x en 2
-    tableau1_x = tableau_x[:int(len(tableau_x)/2)+1]
-    tableau2_x = tableau_x[int(len(tableau_x)/2):]
+    tableau1_x = tab_x[:int(len(tab_x)/2)+1]
+    tableau2_x = tab_x[int(len(tab_x)/2):]
     milieu = ((tableau1_x[-1]+tableau2_x[0])/2).coordinates[0]      #séparateur des deux tableaux
-    tab1y, tab2y = extraction(tableau_y, milieu)    #On retrie les tab des y en conséquence
-    
+    tab1y, tab2y = extraction(tab_y, milieu)    #On retrie les tab des y en conséquence
+
     dist_gauche, couple_gauche = partie_recursive(tableau1_x,tab1y)
     dist_droite, couple_droite = partie_recursive(tableau2_x, tab2y)
 
+    #dist_coté = min(dist_gauche, dist_droite)
     if dist_gauche > dist_droite:
         dist_coté, couple_coté = dist_droite, couple_droite
     else:
-        dist_coté, couple_coté = dist_gauche, couple_gauche    #dist_coté = min(dist_gauche, dist_droite)
+        dist_coté, couple_coté = dist_gauche, couple_gauche
     # Dans bande donne les points dans la bande, on calcul
-    min_bande, couple_bande = min_centre(dans_bande(tableau_y, milieu - dist_coté, milieu + dist_coté))
+    min_bande, couple_bande = min_centre(dans_bande(tab_y, milieu - dist_coté, milieu + dist_coté))
 
     if min_bande > dist_coté:
         return dist_coté, couple_coté
@@ -113,27 +116,30 @@ def partie_recursive(tableau_x, tableau_y):
 
 def diviser_pr_regner(points):
     "algorithme diviser pour régner"
-    tableau_x = sorted(points, key = lambda x: x.coordinates[0]) #Liste de pts par x croissants
-    tableau_y = sorted(points, key = lambda x: x.coordinates[1]) #Liste de pts par y croissants
-    return partie_recursive(tableau_x,tableau_y)
+    tab_x = sorted(points, key = lambda x: x.coordinates[0]) #Liste de pts par x croissants
+    tab_y = sorted(points, key = lambda x: x.coordinates[1]) #Liste de pts par y croissants
+    return partie_recursive(tab_x,tab_y)
 
 
 # Différentes fonctions de test
 
-def main_comparatif():
+def comparatif():
     """
-    ne pas modifier: on charge des instances donnees et affiches les solutions
+    Compare les temps de la solution naïve avec ceux du diviser pour régner
     """
     for instance in argv[1:]: #in argv[1:]
         points = load_instance(instance)
         debut = time.time()
         mini_diviser = diviser_pr_regner(points)
         temps_diviser = time.time() - debut
+
         debut = time.time()
         sol_naif, _ = algo_naif(points)
         temps_naif = time.time() - debut
         if sol_naif == mini_diviser:
+            #Format: temps_diviser , temps_naïf
             return str(temps_diviser) + "," + str(temps_naif)
+        print("Erreur: pas le bon résultat")
         return False
 
 def main():
@@ -146,7 +152,10 @@ def main():
         print(couple)
 
 def comparateur(nb_iteration):
-    "Compare plein de test ainsi que les temps des deux algos"
+    """
+    Génère des nuages de points dans un fichier texte, et vérifie que le diviser pour régner
+    donne bien la bonne solution.
+    """
     nb_points = 1000
     pas = 500
     for _ in range(nb_iteration):
@@ -157,21 +166,39 @@ def comparateur(nb_iteration):
         dist_div , _ = diviser_pr_regner(points)
         dist_naif , _ = algo_naif(points)
         if dist_div == dist_naif:
-            print("ok")
+            print("Ok")
         else:
             print(dist_div, dist_naif)
             print("Erreur")
             break
 
-def analyse_poussee():
+def trace_graphe():
     """
-    Analyse pousée des perfs
+    Trace le graphe comparatif des temps d'exécutions des deux algorithmes
     """
-    for instance in argv[1:]: #in argv[1:]
-        points = load_instance(instance)
-        debut = time.time()
-        mini_diviser = diviser_pr_regner(points)
-        temps_diviser = time.time() - debut
-        print(mini_diviser, "et le temps est: ", temps_diviser)
+    liste_temps_naif = []
+    liste_temps_diviser = []
+    liste_nb_points = []
+    with open("fichier_resultat.txt", 'r', encoding='utf-8') as fichier:
+        lignes = fichier.readlines()
+        for ligne in lignes:
+            ligne = ligne.split(",")
+            liste_temps_diviser.append(float(ligne[0]))
+            liste_temps_naif.append(float(ligne[1]))
+            liste_nb_points.append(float(ligne[2]))
+
+    plt.plot(liste_nb_points,liste_temps_naif, label = "algo naïf", color = "mediumblue")
+
+    #On fait une modélisation de degré 2 pour l'algo naïf
+    coeff = np.polyfit(liste_nb_points, liste_temps_naif, 2)
+    modele_carre = [coeff[2] + coeff[1] * val + coeff[0] * val**2 for val in liste_nb_points]  # Calcul du modèle
+    plt.plot(liste_nb_points, modele_carre,'-.', color = "purple", label = f"Modélisation : y = {coeff[0]}x² + {coeff[1]:.5f}x")
+
+    plt.plot(liste_nb_points, liste_temps_diviser ,label = "diviser pour régner", color="orange")
+    plt.title("Temps d'exécution des algos en fonction du nombre de points")
+    plt.legend()
+    plt. xlabel("nb de points")
+    plt.ylabel("temps")
+    plt.show()
 
 main()
