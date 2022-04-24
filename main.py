@@ -191,8 +191,9 @@ def trace_graphe():
 
     #On fait une modélisation de degré 2 pour l'algo naïf
     coeff = np.polyfit(liste_nb_points, liste_temps_naif, 2)
-    modele_carre = [coeff[2] + coeff[1] * val + coeff[0] * val**2 for val in liste_nb_points]  # Calcul du modèle
-    plt.plot(liste_nb_points, modele_carre,'-.', color = "purple", label = f"Modélisation : y = {coeff[0]}x² + {coeff[1]:.5f}x")
+    modele_carre = [coeff[2] + coeff[1] * val + coeff[0] * val**2 for val in liste_nb_points]
+    label_str = f"Modélisation : y = {coeff[0]}x² + {coeff[1]:.5f}x"
+    plt.plot(liste_nb_points, modele_carre,'-.', color = "purple", label = label_str)
 
     plt.plot(liste_nb_points, liste_temps_diviser ,label = "diviser pour régner", color="orange")
     plt.title("Temps d'exécution des algos en fonction du nombre de points")
