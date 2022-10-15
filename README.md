@@ -39,8 +39,7 @@
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
 Consider a set S of n points in the plane. We look for a
-pair of distinct points of S of minimal distance. The output is thus a
-such a couple of points; if there are several of them it is enough to display one of them.
+pair of distinct points of S of minimal distance. If there are several of them it is enough to display one of them.
 
 <br />
 
