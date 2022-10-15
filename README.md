@@ -76,11 +76,15 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    git clone https://github.com/julienbrs/Find-closest-pair-of-points.git
    ```
-2. Rights to execute
+3. Go to source folder
+   ```sh
+   cd src
+   ```
+3. Rights to execute
    ```sh
    chmod +x main.py
    ```
-3. Then run the program on a test file via:
+4. Then run the program on a test file via:
    ```sh
    ./main.py exemple_X.pts
    ```
