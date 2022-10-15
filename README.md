@@ -1,3 +1,4 @@
+<a name="readme-top"></a>
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/julienbrs)
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
@@ -11,8 +12,6 @@
 <h3 align="center">Find-closest-pair-of-points</h3>
 
   <p align="center">
-    project_description
-    <br />
     <a href="https://github.com/julienbrs/Find-closest-pair-of-points"><strong>Explore the docs »</strong></a>
     <br />
     <br />
