@@ -1,28 +1,108 @@
-# Projet Algorithme
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/julienbrs)
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/julienbrs/Find-closest-pair-of-points">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+<h3 align="center">Find-closest-pair-of-points</h3>
+
+  <p align="center">
+    project_description
+    <br />
+    <a href="https://github.com/julienbrs/Find-closest-pair-of-points"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+  </p>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+<br />
 
 
-Recherche des deux points les plus proches parmi un nuage de points
+<!-- ABOUT THE PROJECT -->
+## About The Project
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
+Consider a set S of n points in the plane. We look for a
+pair of distinct points of S of minimal distance. The output is thus a
+such a couple of points; if there are several of them it is enough to display one of them.
+
+<br />
+
+![Product Name Screen Shot](images/screen.png)
 
 
-### Pré-requis
-
-Python3
-Module de géométrie dans le répertoire courant
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Démarrage
-Pour commencer, donner les droits d'exécutions au fichier main.py par la commande:
-```
-chmod +x main.py
-```
-Puis lancer le programme sur un fichier test via:
-```
-./main.py exemple_X.pts
-```
-Il y a 4 fichiers tests à dispositions.
 
-Il est possible de tracer les graphes de performances des algorithmes grâce à un fichier de résultat, en appelant la fonction trace_graphe() dans le programme main.py 
-Le fichier doit être de format: temps_diviser, temps_naif, nb_points
+<!-- GETTING STARTED -->
+## Getting Started
 
-## Auteur
-Bourseau Julien, élève 1A, ENSIMAG
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+
+* python
+  ```sh
+  sudo apt install python3
+  ```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/julienbrs/Find-closest-pair-of-points.git
+   ```
+2. Rights to execute
+   ```sh
+   chmod +x main.py
+   ```
+3. Then run the program on a test file via:
+   ```sh
+   ./main.py exemple_X.pts
+   ```
+
+There are 4 test files available.
+
+It is possible to plot the performance graphs of the algorithms thanks to a result file, by calling the trace_graphe() function in the main.py program 
+The file must have the format: time_divide, time_naive, nb_points
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+## Contact
+
+Bourseau Julien - *1st year student at Ensimag* - julien.bourseau@gmail.com
+
+Project Link: [https://github.com/julienbrs/Find-closest-pair-of-points](https://github.com/julienbrs/Find-closest-pair-of-points)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://www.linkedin.com/in/julien-bourseau-ba2239228
