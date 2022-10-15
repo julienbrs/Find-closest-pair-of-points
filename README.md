@@ -10,11 +10,6 @@
   </a>
 
 <h3 align="center">Find-closest-pair-of-points</h3>
-
-  <p align="center">
-    <a href="https://github.com/julienbrs/Find-closest-pair-of-points"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
   </p>
 </div>
 
