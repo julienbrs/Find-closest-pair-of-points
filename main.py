@@ -24,7 +24,7 @@ def load_instance(filename):
 
 #Naive algorithm
 
-def algo_naif(points):
+def algo_naive(points):
     "Takes a point cloud and returns the closest pair of points and the distance"
     couples = combinations(points, 2)
     dist_min = math.inf  # initializing properly
@@ -43,83 +43,83 @@ def algo_naif(points):
 
 # Divide and conquer algorithm
 
-def dans_bande(liste_points, xmin, xmax):
-    "Prend une liste de points et renvoie une liste des points dans cette bande"
-    nouvelle_liste = []
-    for point in liste_points:
-        abscisse = point.coordinates[0]
-        if xmin < abscisse < xmax:      # Condition if the point is in the band
-            nouvelle_liste.append(point)
-    return nouvelle_liste
+def in_band(points_list, xmin, xmax):
+    "Takes a list of points and returns a list of points in that band"
+    new_list = []
+    for point in points_list:
+        abscissa = point.coordinates[0]
+        if xmin < abscissa < xmax:      # Condition if the point is in the band
+            new_list.append(point)
+    return new_list
 
 
-def extraction(tableau, sep):
-    "Prend un tableau triés par y croissants et renvoie deux tableaux"
+def extraction(table, sep):
+    "Takes a table sorted by increasing y and returns two tables"
     tab1y = []
     tab2y = []
-    for point in tableau:
+    for point in table:
         if point.coordinates[0] <= sep:     # If x < sep ...
             tab1y.append(point)             # we put in tab2
         else:
             tab2y.append(point)
     return tab1y, tab2y
 
-def min_centre(points_bande_milieu):
-    "Fais l'étape de combinaison du diviser pour régner"
+def min_center(middle_band_points):
+    "Do the divide and conquer combination step"
     min_total = math.inf        # Initializing properly
     couple_min = None
-    if len(points_bande_milieu)<2:      # Recursion stop condition
+    if len(middle_band_points)<2:      # Recursion stop condition
         return math.inf, None           # No couple of points so can't have the minimum
 
-    liste_min_bande = [None for _ in range(len(points_bande_milieu))]
+    list_min_band = [None for _ in range(len(middle_band_points))]
      # We look at the points located in a band of width 7 cells (1 cell per point)
-    for j in range(0,len(points_bande_milieu)):
+    for j in range(0,len(middle_band_points)):
         for i in range(1,8):
-            if i+j >= len(points_bande_milieu):     # We do not leave the width of the table
+            if i+j >= len(middle_band_points):     # We do not leave the width of the table
                 pass
             else:
-                dist = Point.distance_to(points_bande_milieu[j], points_bande_milieu[i+j])
+                dist = Point.distance_to(middle_band_points[j], middle_band_points[i+j])
                 if dist < min_total:
                     min_total = dist
-                    couple_min = (points_bande_milieu[j], points_bande_milieu[i+j])
-        liste_min_bande[j] = min_total      # The minimum of the j column
+                    couple_min = (middle_band_points[j], middle_band_points[i+j])
+        list_min_band[j] = min_total      # The minimum of the j column
     point1 = str(couple_min[0].coordinates[0]) + ", " + str(couple_min[0].coordinates[1])
     point2 = str(couple_min[1].coordinates[0]) + ", " + str(couple_min[1].coordinates[1])
     couple_return = point1 + "; " + point2
     return min_total, couple_return
 
 
-def partie_recursive(tab_x, tab_y):
-    "partie récursive du diviser pour régner"
+def recursive_part(tab_x, tab_y):
+    "recursive part of divide and conquer"
     if len(tab_x)<=3:       # From 3 points we do the naive algo
-        return algo_naif(tab_x)
+        return algo_naive(tab_x)
 
     # We divide the table of x into 2
-    tableau1_x = tab_x[:int(len(tab_x)/2)+1]
-    tableau2_x = tab_x[int(len(tab_x)/2):]
-    milieu = ((tableau1_x[-1]+tableau2_x[0])/2).coordinates[0]      # separator of the two tables
+    table1_x = tab_x[:int(len(tab_x)/2)+1]
+    table2_x = tab_x[int(len(tab_x)/2):]
+    milieu = ((table1_x[-1]+table2_x[0])/2).coordinates[0]      # separator of the two tables
     tab1y, tab2y = extraction(tab_y, milieu)    # We retrieve the y-tabs accordingly
 
-    dist_gauche, couple_gauche = partie_recursive(tableau1_x,tab1y)
-    dist_droite, couple_droite = partie_recursive(tableau2_x, tab2y)
+    dist_left, couple_left = recursive_part(table1_x,tab1y)
+    dist_right, couple_right = recursive_part(table2_x, tab2y)
 
-    # dist_coté = min(dist_gauche, dist_droite)  //todo
-    if dist_gauche > dist_droite:
-        dist_coté, couple_coté = dist_droite, couple_droite
+    # dist_side = min(dist_left, dist_right)
+    if dist_left > dist_right:
+        dist_side, couple_side = dist_right, couple_right
     else:
-        dist_coté, couple_coté = dist_gauche, couple_gauche
+        dist_side, couple_side = dist_left, couple_left
     # In band gives the points in the band, we calculate
-    min_bande, couple_bande = min_centre(dans_bande(tab_y, milieu - dist_coté, milieu + dist_coté))
+    min_band, couple_band = min_center(in_band(tab_y, milieu - dist_side, milieu + dist_side))
 
-    if min_bande > dist_coté:
-        return dist_coté, couple_coté
-    return min_bande, couple_bande
+    if min_band > dist_side:
+        return dist_side, couple_side
+    return min_band, couple_band
 
-def diviser_pr_regner(points):
+def divide_and_conquer(points):
     "divide and conquer algorithm"
     tab_x = sorted(points, key = lambda x: x.coordinates[0]) #List of points by increasing x
     tab_y = sorted(points, key = lambda x: x.coordinates[1]) # List of points by increasing y
-    return partie_recursive(tab_x,tab_y)
+    return recursive_part(tab_x,tab_y)
 
 
 # Different test functions
@@ -130,16 +130,16 @@ def comparatif():
     """
     for instance in argv[1:]: #in argv[1:]
         points = load_instance(instance)
-        debut = time.time()
-        mini_diviser = diviser_pr_regner(points)
-        temps_diviser = time.time() - debut
+        start = time.time()
+        mini_divide = divide_and_conquer(points)
+        time_divide = time.time() - start
 
-        debut = time.time()
-        sol_naif, _ = algo_naif(points)
-        temps_naif = time.time() - debut
-        if sol_naif == mini_diviser:
+        start = time.time()
+        sol_naive, _ = algo_naive(points)
+        time_naive = time.time() - start
+        if sol_naive == mini_divide:
             #Format: time_divide , time_naïf  //todo
-            return str(temps_diviser) + "," + str(temps_naif)
+            return str(time_divide) + "," + str(time_naive)
         print("Error: not the right result")
         return False
 
@@ -149,10 +149,10 @@ def main():
     """
     for instance in argv[1:]: #in argv[1:]
         points = load_instance(instance)
-        _, couple = diviser_pr_regner(points)
+        _, couple = divide_and_conquer(points)
         print(couple)
 
-def comparateur(nb_iteration):
+def comparator(nb_iteration):
     """
     Generate point clouds in a text file, and check that the divide and conquer
     gives the right solution.
@@ -164,12 +164,12 @@ def comparateur(nb_iteration):
         subprocess.call("./generation_pts.py " + str(nb_points) + " > 1ex.pts", shell=True)
         instance = "1ex.pts"
         points = load_instance(instance)
-        dist_div , _ = diviser_pr_regner(points)
-        dist_naif , _ = algo_naif(points)
-        if dist_div == dist_naif:
+        dist_div , _ = divide_and_conquer(points)
+        dist_naive , _ = algo_naive(points)
+        if dist_div == dist_naive:
             print("Ok")
         else:
-            print(dist_div, dist_naif)
+            print(dist_div, dist_naive)
             print("Error")
             break
 
@@ -177,30 +177,30 @@ def trace_graphe():
     """
     Draw the comparative graph of the execution times of the two algorithms
     """
-    liste_temps_naif = []
-    liste_temps_diviser = []
-    liste_nb_points = []
+    list_time_naive = []
+    list_time_divide = []
+    list_nb_points = []
     with open("fichier_resultat.txt", 'r', encoding='utf-8') as fichier:
         lignes = fichier.readlines()
         for ligne in lignes:
             ligne = ligne.split(",")
-            liste_temps_diviser.append(float(ligne[0]))
-            liste_temps_naif.append(float(ligne[1]))
-            liste_nb_points.append(float(ligne[2]))
+            list_time_divide.append(float(ligne[0]))
+            list_time_naive.append(float(ligne[1]))
+            list_nb_points.append(float(ligne[2]))
 
-    plt.plot(liste_nb_points,liste_temps_naif, label = "algo naïf", color = "mediumblue")
+    plt.plot(list_nb_points,list_time_naive, label = "naive algo", color = "mediumblue")
 
     #On fait une modélisation de degré 2 pour l'algo naïf
-    coeff = np.polyfit(liste_nb_points, liste_temps_naif, 2)
-    modele_carre = [coeff[2] + coeff[1] * val + coeff[0] * val**2 for val in liste_nb_points]
-    label_str = f"Modélisation : y = {coeff[0]}x² + {coeff[1]:.5f}x"
-    plt.plot(liste_nb_points, modele_carre,'-.', color = "purple", label = label_str)
+    coeff = np.polyfit(list_nb_points, list_time_naive, 2)
+    modele_carre = [coeff[2] + coeff[1] * val + coeff[0] * val**2 for val in list_nb_points]
+    label_str = f"Modeling : y = {coeff[0]}x² + {coeff[1]:.5f}x"
+    plt.plot(list_nb_points, modele_carre,'-.', color = "purple", label = label_str)
 
-    plt.plot(liste_nb_points, liste_temps_diviser ,label = "diviser pour régner", color="orange")
-    plt.title("Temps d'exécution des algos en fonction du nombre de points")
+    plt.plot(list_nb_points, list_time_divide ,label = "divide and conquer", color="orange")
+    plt.title("time execution time of the algos according to the number of points")
     plt.legend()
     plt. xlabel("nb de points")
-    plt.ylabel("temps")
+    plt.ylabel("time")
     plt.show()
 
 main()
